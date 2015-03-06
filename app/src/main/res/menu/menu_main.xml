@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/action_progress"
+        android:title="showProgress"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_empty"
+        android:title="showEmpty"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_error"
+        android:title="showError"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_content"
+        android:title="showContent"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>
