@@ -4,19 +4,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fc.com.fcrecycleview.adapter.LoadMoreFcAdapterTest;
 import fc.com.recycleview.library.FcRecycleView;
-import fc.com.recycleview.library.SwitcherFcRecycleView;
-import fc.com.recycleview.library.adapter.LoadMoreFcAdapter;
+import fc.com.recycleview.library.OnLoadMoreListener;
 
 
-public class LoadMoreFcActivity extends ActionBarActivity implements LoadMoreFcAdapter.OnLoadMoreListener {
+public class LoadMoreFcActivity extends ActionBarActivity implements OnLoadMoreListener {
 
     private FcRecycleView fcRecycleView;
     private LoadMoreFcAdapterTest adapter;
@@ -29,8 +26,8 @@ public class LoadMoreFcActivity extends ActionBarActivity implements LoadMoreFcA
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         fcRecycleView.setLayoutManager(linearLayoutManager);
         adapter = new LoadMoreFcAdapterTest(this);
-        adapter.setOnLoadMoreListener(this);
         fcRecycleView.setAdapter(adapter);
+        fcRecycleView.setOnLoadMoreListener(this);
     }
 
     public void addData() {
@@ -48,7 +45,7 @@ public class LoadMoreFcActivity extends ActionBarActivity implements LoadMoreFcA
             public void run() {
                 if (Math.random() < 0.5) {
                     Toast.makeText(LoadMoreFcActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                    adapter.setLoadItemType(LoadMoreFcAdapter.LoadItemType.ERROR);
+                    fcRecycleView.notifyError();
                 } else {
                     addData();
                 }

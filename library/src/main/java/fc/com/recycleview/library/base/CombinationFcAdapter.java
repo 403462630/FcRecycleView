@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.adapter;
+package fc.com.recycleview.library.base;
 
 import android.support.v7.widget.RecyclerView;
 

@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.adapter;
+package fc.com.recycleview.library.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -11,10 +11,10 @@ public abstract class BaseItemFcAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public final int getItemViewType(int position) {
-        if (position == getItemFcPosition()) {
-            return getItemFcViewType(position);
+        if (position == getFcItemPosition()) {
+            return getFcItemViewType(position);
         } else {
-            if (position > getItemFcPosition()) {
+            if (position > getFcItemPosition()) {
                 position  = position - 1;
             }
             return getMainViewType(position);
@@ -26,7 +26,7 @@ public abstract class BaseItemFcAdapter extends RecyclerView.Adapter implements 
     }
 
     @Override
-    public int getItemFcViewType(int position) {
+    public int getFcItemViewType(int position) {
         return FC_ITEM_TYPE;
     }
 
@@ -35,12 +35,17 @@ public abstract class BaseItemFcAdapter extends RecyclerView.Adapter implements 
         return getCount() + 1;
     }
 
+    @Override
+    public int getFcItemPosition() {
+        return getCount();
+    }
+
     public abstract int getCount();
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == getItemViewType(getItemFcPosition())) {
-            return onCreateItemFcViewHolder(parent, viewType);
+        if (viewType == getItemViewType(getFcItemPosition())) {
+            return onCreateFcItemViewHolder(parent, viewType);
         } else {
             return onCreateMainViewHolder(parent, viewType);
         }
@@ -48,10 +53,10 @@ public abstract class BaseItemFcAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == getItemFcViewType(position)) {
-            onBindItemFcViewHolder(holder, position);
+        if (getItemViewType(position) == getFcItemViewType(position)) {
+            onBindFcItemViewHolder(holder, position);
         } else {
-            if (position > getItemFcPosition()) {
+            if (position > getFcItemPosition()) {
                 onBindMainViewHolder(holder, position - 1);
             } else {
                 onBindMainViewHolder(holder, position);

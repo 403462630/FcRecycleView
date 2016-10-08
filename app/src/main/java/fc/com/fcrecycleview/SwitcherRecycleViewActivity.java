@@ -11,11 +11,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fc.com.fcrecycleview.adapter.LoadMoreFcAdapterTest;
+import fc.com.recycleview.library.OnLoadMoreListener;
 import fc.com.recycleview.library.SwitcherFcRecycleView;
-import fc.com.recycleview.library.adapter.LoadMoreFcAdapter;
 
 
-public class SwitcherRecycleViewActivity extends ActionBarActivity implements LoadMoreFcAdapter.OnLoadMoreListener {
+public class SwitcherRecycleViewActivity extends ActionBarActivity implements OnLoadMoreListener {
 
     private SwitcherFcRecycleView fcRecycleView;
     private LoadMoreFcAdapterTest adapter;
@@ -28,8 +28,8 @@ public class SwitcherRecycleViewActivity extends ActionBarActivity implements Lo
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         fcRecycleView.setLayoutManager(linearLayoutManager);
         adapter = new LoadMoreFcAdapterTest(this);
-        adapter.setOnLoadMoreListener(this);
         fcRecycleView.setAdapter(adapter);
+        fcRecycleView.setOnLoadMoreListener(this);
     }
 
     public void addData() {
@@ -47,7 +47,7 @@ public class SwitcherRecycleViewActivity extends ActionBarActivity implements Lo
             public void run() {
                 if (Math.random() < 0.5) {
                     Toast.makeText(SwitcherRecycleViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                    adapter.setLoadItemType(LoadMoreFcAdapter.LoadItemType.ERROR);
+                    fcRecycleView.notifyError();
                 } else {
                     addData();
                 }

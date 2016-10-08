@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.adapter;
+package fc.com.recycleview.library.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -16,10 +16,10 @@ public abstract class BaseItemCombinationFcAdapter<T> extends CombinationFcAdapt
 
     @Override
     public final int getItemViewType(int position) {
-        if (getItemFcPosition() == position) {
-            return getItemFcViewType(position);
+        if (getFcItemPosition() == position) {
+            return getFcItemViewType(position);
         } else {
-            if (position > getItemFcPosition()) {
+            if (position > getFcItemPosition()) {
                 position = position - 1;
             }
             return getWrapAdapter().getItemViewType(position);
@@ -27,9 +27,14 @@ public abstract class BaseItemCombinationFcAdapter<T> extends CombinationFcAdapt
     }
 
     @Override
+    public int getFcItemPosition() {
+        return getCount();
+    }
+
+    @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == getItemViewType(getItemFcPosition())) {
-            return onCreateItemFcViewHolder(parent, viewType);
+        if (viewType == getItemViewType(getFcItemPosition())) {
+            return onCreateFcItemViewHolder(parent, viewType);
         } else {
             return getWrapAdapter().onCreateViewHolder(parent, viewType);
         }
@@ -37,10 +42,10 @@ public abstract class BaseItemCombinationFcAdapter<T> extends CombinationFcAdapt
 
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == getItemFcViewType(position)) {
-            onBindItemFcViewHolder(holder, position);
+        if (getItemViewType(position) == getFcItemViewType(position)) {
+            onBindFcItemViewHolder(holder, position);
         } else {
-            if (position > getItemFcPosition()){
+            if (position > getFcItemPosition()){
                 position = position - 1;
             }
             getWrapAdapter().onBindViewHolder(holder, position);
@@ -57,7 +62,7 @@ public abstract class BaseItemCombinationFcAdapter<T> extends CombinationFcAdapt
     }
 
     @Override
-    public int getItemFcViewType(int position) {
+    public int getFcItemViewType(int position) {
         return FC_ITEM_TYPE;
     }
 }

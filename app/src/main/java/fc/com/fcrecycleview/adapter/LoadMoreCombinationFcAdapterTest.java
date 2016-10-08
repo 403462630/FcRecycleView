@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fc.com.fcrecycleview.R;
-import fc.com.recycleview.library.adapter.LoadMoreFcAdapter;
 
 /**
  * Created by rjhy on 15-3-6.

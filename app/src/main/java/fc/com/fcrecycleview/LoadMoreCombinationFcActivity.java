@@ -4,20 +4,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fc.com.fcrecycleview.adapter.LoadMoreCombinationFcAdapterTest;
-import fc.com.fcrecycleview.adapter.LoadMoreFcAdapterTest;
 import fc.com.recycleview.library.FcRecycleView;
-import fc.com.recycleview.library.adapter.LoadMoreCombinationFcAdapter;
-import fc.com.recycleview.library.adapter.LoadMoreFcAdapter;
+import fc.com.recycleview.library.OnLoadMoreListener;
 
 
-public class LoadMoreCombinationFcActivity extends ActionBarActivity implements LoadMoreCombinationFcAdapter.OnLoadMoreListener {
+public class LoadMoreCombinationFcActivity extends ActionBarActivity implements OnLoadMoreListener {
 
     private FcRecycleView fcRecycleView;
     private LoadMoreCombinationFcAdapterTest adapter;
@@ -31,8 +27,8 @@ public class LoadMoreCombinationFcActivity extends ActionBarActivity implements 
         fcRecycleView.setLayoutManager(linearLayoutManager);
         adapter = new LoadMoreCombinationFcAdapterTest(this);
 
-        fcRecycleView.setAdapter(new LoadMoreCombinationFcAdapter(this, adapter));
-        ((LoadMoreCombinationFcAdapter)fcRecycleView.getAdapter()).setOnLoadMoreListener(this);
+        fcRecycleView.setAdapter(adapter);
+        fcRecycleView.setOnLoadMoreListener(this);
     }
 
     public void addData() {
@@ -50,10 +46,10 @@ public class LoadMoreCombinationFcActivity extends ActionBarActivity implements 
             public void run() {
                 if (Math.random() < 0.5) {
                     Toast.makeText(LoadMoreCombinationFcActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                    ((LoadMoreCombinationFcAdapter)fcRecycleView.getAdapter()).setLoadItemType(LoadMoreCombinationFcAdapter.LoadItemType.ERROR);
+                    fcRecycleView.notifyError();
                 } else {
                     addData();
-                    ((LoadMoreCombinationFcAdapter)fcRecycleView.getAdapter()).setLoadItemType(LoadMoreCombinationFcAdapter.LoadItemType.NO_LOADING);
+                    fcRecycleView.notifyNormal();
                 }
             }
         }, 2000);

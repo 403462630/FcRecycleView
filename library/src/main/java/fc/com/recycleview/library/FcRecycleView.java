@@ -5,21 +5,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import fc.com.recycleview.library.adapter.ItemFcAdapter;
-import fc.com.recycleview.library.adapter.ItemScrollAdapter;
-import fc.com.recycleview.library.adapter.LoadMoreCombinationFcAdapter;
+import fc.com.recycleview.library.base.ItemFcAdapter;
+import fc.com.recycleview.library.base.ItemNotifyAdapter;
+import fc.com.recycleview.library.base.ItemScrollAdapter;
 
 /**
  * Created by rjhy on 15-3-4.
  */
 public class FcRecycleView extends RecyclerView {
 
+    private boolean flag;
+
+    private ItemNotifyAdapter itemNotifyAdapter;
     private LoadMoreCombinationFcAdapter fcAdapter;
     private ItemScrollAdapter itemScrollAdapter;
 
     private OnScrollListener mOnScrollListener;
-
-    private boolean loading;
 
     public FcRecycleView(Context context) {
         this(context, null);
@@ -37,6 +38,16 @@ public class FcRecycleView extends RecyclerView {
             if (mOnScrollListener != null) {
                 mOnScrollListener.onScrollStateChanged(recyclerView, newState);
             }
+
+            if (flag && newState == SCROLL_STATE_IDLE) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                if (itemScrollAdapter != null) {
+                    itemScrollAdapter.scroll(pastVisiblesItems, visibleItemCount, totalItemCount);
+                }
+            }
         }
 
         @Override
@@ -44,14 +55,6 @@ public class FcRecycleView extends RecyclerView {
             super.onScrolled(recyclerView, dx, dy);
             if (mOnScrollListener != null) {
                 mOnScrollListener.onScrolled(recyclerView, dx, dy);
-            }
-
-            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            int visibleItemCount = layoutManager.getChildCount();
-            int totalItemCount = layoutManager.getItemCount();
-            int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-            if (itemScrollAdapter != null) {
-                itemScrollAdapter.scroll(pastVisiblesItems, visibleItemCount, totalItemCount);
             }
         }
     };
@@ -66,6 +69,18 @@ public class FcRecycleView extends RecyclerView {
     }
 
     @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                flag = true;
+            }
+        }, 1000);
+    }
+
+
+    @Override
     public void setAdapter(Adapter adapter) {
         if (adapter instanceof ItemFcAdapter) {
             super.setAdapter(adapter);
@@ -77,6 +92,10 @@ public class FcRecycleView extends RecyclerView {
         if (getAdapter() instanceof ItemScrollAdapter) {
             itemScrollAdapter = (ItemScrollAdapter) getAdapter();
         }
+
+        if (getAdapter() instanceof ItemNotifyAdapter) {
+            itemNotifyAdapter = (ItemNotifyAdapter) getAdapter();
+        }
     }
 
     @Override
@@ -85,6 +104,44 @@ public class FcRecycleView extends RecyclerView {
             return fcAdapter;
         } else {
             return super.getAdapter();
+        }
+    }
+
+    public void notifyError() {
+        if (itemNotifyAdapter != null) {
+            itemNotifyAdapter.notifyError();
+        }
+    }
+
+
+    public void notifyLoadding() {
+        if (itemNotifyAdapter != null) {
+            itemNotifyAdapter.notifyLoading();
+        }
+    }
+
+
+    public void notifyLoadedAll() {
+        if (itemNotifyAdapter != null) {
+            itemNotifyAdapter.notifyLoadedAll();
+        }
+    }
+
+
+    public void notifyNormal() {
+        if (itemNotifyAdapter != null) {
+            itemNotifyAdapter.notifyNormal();
+        }
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        Adapter adapter = getAdapter();
+        if (adapter != null) {
+            if (adapter instanceof LoadMoreCombinationFcAdapter) {
+                ((LoadMoreCombinationFcAdapter)adapter).setOnLoadMoreListener(listener);
+            } else if (adapter instanceof LoadMoreFcAdapter) {
+                ((LoadMoreFcAdapter)adapter).setOnLoadMoreListener(listener);
+            }
         }
     }
 }

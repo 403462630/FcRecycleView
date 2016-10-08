@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fc.com.fcrecycleview.R;
-import fc.com.recycleview.library.adapter.LoadMoreFcAdapter;
+import fc.com.recycleview.library.LoadMoreFcAdapter;
 
 /**
  * Created by rjhy on 15-3-6.
@@ -30,9 +30,9 @@ public class LoadMoreFcAdapterTest extends LoadMoreFcAdapter {
         data.addAll(list);
         notifyItemRangeInserted(data.size() - list.size(), list.size());
         if (list.size() == 0) {
-            setLoadItemType(LoadItemType.LOADED_ALL);
+            notifyLoadedAll();
         } else {
-            setLoadItemType(LoadItemType.NO_LOADING);
+            notifyNormal();
         }
     }
 

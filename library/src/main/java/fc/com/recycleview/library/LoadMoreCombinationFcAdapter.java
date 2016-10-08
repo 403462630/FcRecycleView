@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.adapter;
+package fc.com.recycleview.library;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,29 +9,51 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import fc.com.recycleview.library.R;
+import fc.com.recycleview.library.base.BaseItemCombinationFcAdapter;
+import fc.com.recycleview.library.base.ItemNotifyAdapter;
+import fc.com.recycleview.library.base.ItemScrollAdapter;
 
 /**
- * Created by rjhy on 15-3-5.
+ * Created by rjhy on 15-3-4.
  */
-public abstract class LoadMoreFcAdapter extends BaseItemFcAdapter implements ItemScrollAdapter {
+public class LoadMoreCombinationFcAdapter<T> extends BaseItemCombinationFcAdapter implements ItemScrollAdapter, ItemNotifyAdapter {
 
     private Context context;
     private OnLoadMoreListener onLoadMoreListener;
 
-    public void setLoadItemType(LoadItemType loadType) {
+    protected void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    private void setLoadItemType(LoadItemType loadType) {
         this.loadType = loadType;
-        notifyItemChanged(getItemFcPosition());
+        notifyItemChanged(getFcItemPosition());
     }
 
     private LoadItemType loadType = LoadItemType.NO_LOADING;
 
-    public static enum LoadItemType{
-        LOADING, NO_LOADING, LOADED_ALL, ERROR
+    @Override
+    public void notifyError() {
+        setLoadItemType(LoadItemType.ERROR);
     }
 
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
+    @Override
+    public void notifyLoading() {
+        setLoadItemType(LoadItemType.LOADING);
+    }
+
+    @Override
+    public void notifyLoadedAll() {
+        setLoadItemType(LoadItemType.LOADED_ALL);
+    }
+
+    @Override
+    public void notifyNormal() {
+        setLoadItemType(LoadItemType.NO_LOADING);
+    }
+
+    public static enum LoadItemType{
+        LOADING, NO_LOADING, LOADED_ALL, ERROR
     }
 
     public boolean isLoading() {
@@ -46,22 +68,18 @@ public abstract class LoadMoreFcAdapter extends BaseItemFcAdapter implements Ite
         return loadType == LoadItemType.ERROR;
     }
 
-    public LoadMoreFcAdapter(Context context) {
+    public LoadMoreCombinationFcAdapter(Context context, RecyclerView.Adapter adapter) {
+        super(adapter);
         this.context = context;
     }
 
     @Override
-    public int getItemFcPosition() {
-        return getCount();
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateItemFcViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateFcItemViewHolder(ViewGroup parent, int viewType) {
         return new LoadMoreViewHolder(LayoutInflater.from(context).inflate(R.layout.load_more, parent, false));
     }
 
     @Override
-    public void onBindItemFcViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindFcItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         LoadMoreViewHolder loadMoreViewHolder = (LoadMoreViewHolder) holder;
         switch (loadType) {
             case LOADING:
@@ -98,7 +116,7 @@ public abstract class LoadMoreFcAdapter extends BaseItemFcAdapter implements Ite
 
     @Override
     public void scroll(int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (getItemFcPosition() >= firstVisibleItem && getItemFcPosition() <= (firstVisibleItem + visibleItemCount)) {
+        if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
             if (!isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
                 setLoadItemType(LoadItemType.LOADING);
                 onLoadMoreListener.onLoadMore();
@@ -118,9 +136,5 @@ public abstract class LoadMoreFcAdapter extends BaseItemFcAdapter implements Ite
             progressBar = (ProgressBar) itemView.findViewById(R.id.pb_loadding);
             contentView = (TextView) itemView.findViewById(R.id.tv_content);
         }
-    }
-
-    public static interface OnLoadMoreListener {
-        public void onLoadMore();
     }
 }
