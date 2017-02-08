@@ -9,26 +9,26 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fc.com.fcrecycleview.adapter.LoadMoreCombinationFcAdapterTest;
-import fc.com.recycleview.library.FcRecycleView;
-import fc.com.recycleview.library.OnLoadMoreListener;
+import fc.recycleview.LoadMoreRecycleView;
+import fc.recycleview.OnLoadMoreListener;
 
 
 public class LoadMoreCombinationFcActivity extends ActionBarActivity implements OnLoadMoreListener {
 
-    private FcRecycleView fcRecycleView;
+    private LoadMoreRecycleView loadMoreRecycleView;
     private LoadMoreCombinationFcAdapterTest adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        fcRecycleView = (FcRecycleView) findViewById(R.id.fc_recycle_view);
+        loadMoreRecycleView = (LoadMoreRecycleView) findViewById(R.id.fc_recycle_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        fcRecycleView.setLayoutManager(linearLayoutManager);
+        loadMoreRecycleView.setLayoutManager(linearLayoutManager);
         adapter = new LoadMoreCombinationFcAdapterTest(this);
 
-        fcRecycleView.setAdapter(adapter);
-        fcRecycleView.setOnLoadMoreListener(this);
+        loadMoreRecycleView.setAdapter(adapter);
+        loadMoreRecycleView.setOnLoadMoreListener(this);
     }
 
     public void addData() {
@@ -46,10 +46,10 @@ public class LoadMoreCombinationFcActivity extends ActionBarActivity implements 
             public void run() {
                 if (Math.random() < 0.5) {
                     Toast.makeText(LoadMoreCombinationFcActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                    fcRecycleView.notifyError();
+                    loadMoreRecycleView.notifyError();
                 } else {
                     addData();
-                    fcRecycleView.notifyNormal();
+                    loadMoreRecycleView.notifyNormal();
                 }
             }
         }, 2000);

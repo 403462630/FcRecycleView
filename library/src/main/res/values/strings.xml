@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">library</string>
+    <string name="load_more_loading">正在加载,请稍后...</string>
+    <string name="load_more_error">加载失败,点击重新加载</string>
+    <string name="load_more_normal">点击加载更多</string>
+    <string name="load_more_drag">正在加载,请稍后...</string>
+    <string name="load_more_loaded_all">没有更多内容了哦</string>
+    <string name="load_more_empty">暂无内容了哦</string>
 </resources>

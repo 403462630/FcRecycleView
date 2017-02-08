@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.base;
+package fc.recycleview.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -6,11 +6,11 @@ import android.view.ViewGroup;
 /**
  * Created by rjhy on 15-3-5.
  */
-public abstract class BaseItemCombinationFcAdapter<T> extends CombinationFcAdapter implements ItemFcAdapter {
+public abstract class BaseItemCombinationAdapter<T> extends CombinationAdapter implements ItemFcAdapter {
 
     public static final int FC_ITEM_TYPE = -2001;
 
-    public BaseItemCombinationFcAdapter(RecyclerView.Adapter adapter) {
+    public BaseItemCombinationAdapter(RecyclerView.Adapter adapter) {
         super(adapter);
     }
 

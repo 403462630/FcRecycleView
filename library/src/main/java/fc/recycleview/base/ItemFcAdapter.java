@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.base;
+package fc.recycleview.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

@@ -1,4 +1,4 @@
-package fc.com.recycleview.library.base;
+package fc.recycleview.base;
 
 /**
  * Created by rjhy on 15-3-4.

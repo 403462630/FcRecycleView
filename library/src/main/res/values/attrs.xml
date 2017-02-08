@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="switcherFcRecycleView">
-        <attr name="layout_progress" format="reference" />
-        <attr name="layout_error" format="reference" />
-        <attr name="layout_empty" format="reference" />
+    <declare-styleable name="LoadMoreRecycleView">
+        <attr name="load_more_layout_empty" format="reference" />
+        <attr name="load_more_layout_error" format="reference" />
+        <attr name="load_more_layout_drag" format="reference" />
+        <attr name="load_more_layout_loading" format="reference" />
+        <attr name="load_more_layout_normal" format="reference" />
+        <attr name="load_more_layout_loaded_all" format="reference" />
     </declare-styleable>
 </resources>

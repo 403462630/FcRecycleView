@@ -4,18 +4,8 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
     <Button
-        android:id="@+id/bt1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LoadMoreFcAdapterText"/>
-    <Button
         android:id="@+id/bt2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="LoadMoreCominationFcAdapterText"/>
-    <Button
-        android:id="@+id/bt3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SwitcherRecycleViewActivity"/>
 </LinearLayout>

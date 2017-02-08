@@ -1,4 +1,4 @@
-package fc.com.recycleview.library;
+package fc.recycleview;
 
 /**
  * @author rjhy

@@ -1,15 +1,15 @@
-package fc.com.recycleview.library.base;
+package fc.recycleview.base;
 
 import android.support.v7.widget.RecyclerView;
 
 /**
  * Created by rjhy on 15-3-5.
  */
-public abstract class CombinationFcAdapter extends RecyclerView.Adapter {
+public abstract class CombinationAdapter extends RecyclerView.Adapter {
 
     private RecyclerView.Adapter adapter;
 
-    public CombinationFcAdapter(RecyclerView.Adapter adapter) {
+    public CombinationAdapter(RecyclerView.Adapter adapter) {
         this.adapter = adapter;
         this.adapter.registerAdapterDataObserver(new CombinationDataObserver());
     }

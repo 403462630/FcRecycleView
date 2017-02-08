@@ -17,15 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoadMoreFcActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name=".LoadMoreCombinationFcActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".SwitcherRecycleViewActivity"
             android:label="@string/app_name" >
         </activity>
     </application>
