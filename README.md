@@ -2,10 +2,10 @@
 
 ```
 repositories {
-    maven { url "http://fc.bintray.com/maven" }
+    maven { url  "http://dl.bintray.com/403462630/maven"  }
 }
 
-compile 'fc.recycleview:library:1.0.0'
+compile 'fc.recyclerview:library:1.0.0'
 ```
 
 
