@@ -8,5 +8,6 @@
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/fc_load_more"
         android:text="@string/load_more_empty"/>
 </LinearLayout>

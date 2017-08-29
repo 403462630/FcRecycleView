@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="fc_load_more">
+        <item name="android:textSize">12dp</item>
+    </style>
+</resources>
