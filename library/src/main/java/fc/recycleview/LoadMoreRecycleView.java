@@ -147,7 +147,7 @@ public class LoadMoreRecycleView extends RecyclerView {
             adapter.setDragRes(dragRes);
         }
         if (loadedAllRes != 0) {
-            adapter.setLoadingRes(loadedAllRes);
+            adapter.setLoadedAllRes(loadedAllRes);
         }
         if (normalRes != 0) {
             adapter.setNormalRes(normalRes);
