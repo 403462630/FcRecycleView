@@ -28,7 +28,7 @@ public abstract class BaseItemCombinationAdapter<T> extends CombinationAdapter i
 
     @Override
     public int getFcItemPosition() {
-        return getCount();
+        return getRealCount();
     }
 
     @Override
@@ -52,13 +52,13 @@ public abstract class BaseItemCombinationAdapter<T> extends CombinationAdapter i
         }
     }
 
-    public int getCount() {
+    public int getRealCount() {
         return getWrapAdapter().getItemCount();
     }
 
     @Override
     public final int getItemCount() {
-        return getCount() + 1;
+        return getRealCount() + 1;
     }
 
     @Override

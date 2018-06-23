@@ -2,6 +2,7 @@ package fc.recycleview;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     public static final int DRAGE_ITEM_TYPE = -3006;
     private Context context;
     private OnLoadMoreListener onLoadMoreListener;
-    private boolean hasDrag;
+    private boolean hasDrag = true;
 
     private String emptyText;
     private String errorText;
@@ -51,7 +52,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
 
     public final void setDragRes(@LayoutRes int dragRes) {
         this.dragRes = dragRes;
-        hasDrag = (dragRes != loadingRes);
+        hasDrag = (dragRes != loadingRes) && dragRes != 0;
     }
 
     public final void setEmptyRes(@LayoutRes int emptyRes) {
@@ -64,7 +65,6 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
 
     public final void setLoadingRes(@LayoutRes int loadingRes) {
         this.loadingRes = loadingRes;
-        this.dragRes = loadingRes;
     }
 
     public final void setLoadedAllRes(@LayoutRes int loadedAllRes) {
@@ -99,7 +99,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         this.emptyText = emptyText;
     }
 
-    protected void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
@@ -108,8 +108,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
             this.loadType = loadType;
             return;
         }
-        this.loadType = loadType;
-        notifyItemChanged(getFcItemPosition());
+        if (this.loadType != loadType) {
+            this.loadType = loadType;
+            notifyItemChanged(getFcItemPosition());
+        }
     }
 
     @Override
@@ -122,7 +124,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
             return DRAGE_ITEM_TYPE;
         } else {
             if (loadType == LoadItemType.LOADED_ALL) {
-                if (getCount() == 0) {
+                if (getRealCount() == 0) {
                     return EMPTY_ITEM_TYPE;
                 } else {
                     return LOADED_ALL_ITEM_TYPE;
@@ -256,12 +258,22 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     @Override
     public void scroll(RecyclerView.LayoutManager layoutManager, int state) {
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-            int visibleItemCount = linearLayoutManager.getChildCount();
-            int totalItemCount = linearLayoutManager.getItemCount();
-            int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-            if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
-                loadMore();
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                int visibleItemCount = linearLayoutManager.getChildCount();
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
+                    loadMore();
+                }
+            } else if (layoutManager instanceof GridLayoutManager) {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+                int visibleItemCount = gridLayoutManager.getChildCount();
+                int totalItemCount = gridLayoutManager.getItemCount();
+                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
+                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
+                    loadMore();
+                }
             }
         } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
             if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
