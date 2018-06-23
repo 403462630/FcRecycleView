@@ -75,7 +75,7 @@ public class LoadMoreRecycleView extends RecyclerView {
             }
             if (flag) {
                 if (itemScrollAdapter != null) {
-                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    LayoutManager layoutManager = recyclerView.getLayoutManager();
                     itemScrollAdapter.scroll(layoutManager, newState);
                 }
             }
