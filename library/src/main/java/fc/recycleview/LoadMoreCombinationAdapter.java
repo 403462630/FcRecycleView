@@ -29,6 +29,8 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private Context context;
     private OnLoadMoreListener onLoadMoreListener;
     private boolean hasDrag = true;
+    private boolean isIdleLoading = false;
+    private int lastLoadingItem = 0;
 
     private String emptyText;
     private String errorText;
@@ -49,6 +51,14 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private int loadedAllRes = R.layout.load_more_loaded_all;
     @LayoutRes
     private int normalRes = R.layout.load_more_normal;
+
+    public void setIdleLoading(boolean idleLoading) {
+        isIdleLoading = idleLoading;
+    }
+
+    public void setLastLoadingItem(int lastLoadingItem) {
+        this.lastLoadingItem = lastLoadingItem;
+    }
 
     public final void setDragRes(@LayoutRes int dragRes) {
         this.dragRes = dragRes;
@@ -257,21 +267,21 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
 
     @Override
     public void scroll(RecyclerView.LayoutManager layoutManager, int state) {
-        if (state == RecyclerView.SCROLL_STATE_IDLE) {
+        if (!isIdleLoading || state == RecyclerView.SCROLL_STATE_IDLE) {
             if (layoutManager instanceof LinearLayoutManager) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
                 int visibleItemCount = linearLayoutManager.getChildCount();
-                int totalItemCount = linearLayoutManager.getItemCount();
+//                int totalItemCount = linearLayoutManager.getItemCount();
                 int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
+                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
                     loadMore();
                 }
             } else if (layoutManager instanceof GridLayoutManager) {
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
                 int visibleItemCount = gridLayoutManager.getChildCount();
-                int totalItemCount = gridLayoutManager.getItemCount();
+//                int totalItemCount = gridLayoutManager.getItemCount();
                 int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
-                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() < (firstVisibleItem + visibleItemCount)) {
+                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
                     loadMore();
                 }
             }

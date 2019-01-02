@@ -3,6 +3,7 @@ package fc.recycleview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -38,6 +39,8 @@ public class LoadMoreRecycleView extends RecyclerView {
     private int loadedAllRes = 0;
     @LayoutRes
     private int normalRes = 0;
+    private boolean isIdleLoading = false;
+    private int lastLoadingItem = 0;
 
     public void setEmptyText(String emptyText) {
         this.emptyText = emptyText;
@@ -63,6 +66,8 @@ public class LoadMoreRecycleView extends RecyclerView {
         loadedAllRes = typedArray.getResourceId(R.styleable.LoadMoreRecycleView_load_more_layout_loaded_all, 0);
         loadingRes = typedArray.getResourceId(R.styleable.LoadMoreRecycleView_load_more_layout_loading, 0);
         normalRes = typedArray.getResourceId(R.styleable.LoadMoreRecycleView_load_more_layout_normal, 0);
+        isIdleLoading = typedArray.getBoolean(R.styleable.LoadMoreRecycleView_load_more_idle_loading, false);
+        lastLoadingItem = typedArray.getInt(R.styleable.LoadMoreRecycleView_load_more_last_loading_item, 0);
         typedArray.recycle();
     }
 
@@ -86,6 +91,25 @@ public class LoadMoreRecycleView extends RecyclerView {
             super.onScrolled(recyclerView, dx, dy);
             if (mOnScrollListener != null) {
                 mOnScrollListener.onScrolled(recyclerView, dx, dy);
+            }
+            if (!isIdleLoading) {
+                if (flag) {
+                    if (itemScrollAdapter != null) {
+                        boolean scrollFlag = true;
+                        LayoutManager layoutManager = recyclerView.getLayoutManager();
+                        if (layoutManager instanceof LinearLayoutManager) {
+                            int orientation = ((LinearLayoutManager) layoutManager).getOrientation();
+                            if (orientation == LinearLayoutManager.VERTICAL) {
+                                scrollFlag = dy > 0;
+                            } else {
+                                scrollFlag = dx > 0;
+                            }
+                        }
+                        if (scrollFlag) {
+                            itemScrollAdapter.scroll(layoutManager, recyclerView.getScrollState());
+                        }
+                    }
+                }
             }
         }
     };
@@ -134,6 +158,8 @@ public class LoadMoreRecycleView extends RecyclerView {
     }
 
     private void initLoadMoreCombinationAdapter(LoadMoreCombinationAdapter adapter) {
+        adapter.setLastLoadingItem(lastLoadingItem);
+        adapter.setIdleLoading(isIdleLoading);
         if (emptyRes != 0) {
             adapter.setEmptyRes(emptyRes);
         }

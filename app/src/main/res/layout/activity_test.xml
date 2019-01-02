@@ -17,5 +17,6 @@
         android:clipToPadding="false"
         android:layout_below="@id/btn1"
         android:overScrollMode="never"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        app:load_more_last_loading_item="5"/>
 </RelativeLayout>

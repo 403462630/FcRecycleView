@@ -7,5 +7,7 @@
         <attr name="load_more_layout_loading" format="reference" />
         <attr name="load_more_layout_normal" format="reference" />
         <attr name="load_more_layout_loaded_all" format="reference" />
+        <attr name="load_more_idle_loading" format="boolean" />
+        <attr name="load_more_last_loading_item" format="integer" />
     </declare-styleable>
 </resources>
