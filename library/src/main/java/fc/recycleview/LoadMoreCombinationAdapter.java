@@ -275,6 +275,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
                 if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
                     loadMore();
+                } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
+                    if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
+                        setLoadItemType(LoadItemType.DRAGE);
+                    }
                 }
             } else if (layoutManager instanceof GridLayoutManager) {
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
@@ -283,6 +287,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
                 if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
                     loadMore();
+                } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
+                    if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
+                        setLoadItemType(LoadItemType.DRAGE);
+                    }
                 }
             }
         } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
