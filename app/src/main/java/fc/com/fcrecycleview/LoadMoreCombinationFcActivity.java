@@ -2,8 +2,9 @@ package fc.com.fcrecycleview;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import fc.recycleview.LoadMoreRecycleView;
 import fc.recycleview.OnLoadMoreListener;
 
 
-public class LoadMoreCombinationFcActivity extends ActionBarActivity implements OnLoadMoreListener {
+public class LoadMoreCombinationFcActivity extends AppCompatActivity implements OnLoadMoreListener {
 
     private LoadMoreRecycleView loadMoreRecycleView;
     private LoadMoreCombinationFcAdapterTest adapter;
@@ -23,8 +24,10 @@ public class LoadMoreCombinationFcActivity extends ActionBarActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         loadMoreRecycleView = (LoadMoreRecycleView) findViewById(R.id.fc_recycle_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        loadMoreRecycleView.setLayoutManager(linearLayoutManager);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        loadMoreRecycleView.setLayoutManager(linearLayoutManager);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        loadMoreRecycleView.setLayoutManager(staggeredGridLayoutManager);
         adapter = new LoadMoreCombinationFcAdapterTest(this);
 
         loadMoreRecycleView.setAdapter(adapter);

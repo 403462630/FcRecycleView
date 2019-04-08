@@ -3,6 +3,8 @@ package fc.recycleview.base;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 /**
  * Created by rjhy on 15-3-5.
  */
@@ -37,6 +39,18 @@ public abstract class BaseItemCombinationAdapter<T> extends CombinationAdapter i
             return onCreateFcItemViewHolder(parent, viewType);
         } else {
             return getWrapAdapter().onCreateViewHolder(parent, viewType);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        if (getItemViewType(position) == getFcItemViewType(position)) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            if (position > getFcItemPosition()){
+                position = position - 1;
+            }
+            getWrapAdapter().onBindViewHolder(holder, position, payloads);
         }
     }
 

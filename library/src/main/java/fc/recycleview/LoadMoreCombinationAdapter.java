@@ -1,10 +1,13 @@
 package fc.recycleview;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +41,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private String dragText;
     private String loadedAllText;
     private String normalText;
+    private Handler handler = new Handler();
 
     @LayoutRes
     private  int dragRes = R.layout.load_more_drag;
@@ -120,7 +124,17 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         }
         if (this.loadType != loadType) {
             this.loadType = loadType;
-            notifyItemChanged(getFcItemPosition());
+            Log.i("TAG", "LoadItemType: " + loadType.name());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        notifyItemChanged(getFcItemPosition());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -193,6 +207,56 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     }
 
     @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (holder instanceof ItemViewHolder) {
+
+        } else {
+            getWrapAdapter().onViewAttachedToWindow(holder);
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof ItemViewHolder) {
+
+        } else {
+            getWrapAdapter().onViewDetachedFromWindow(holder);
+        }
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+        if (holder instanceof ItemViewHolder) {
+            return super.onFailedToRecycleView(holder);
+        } else {
+            return getWrapAdapter().onFailedToRecycleView(holder);
+        }
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof ItemViewHolder) {
+            super.onViewRecycled(holder);
+        } else {
+            getWrapAdapter().onViewRecycled(holder);
+        }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        getWrapAdapter().onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        getWrapAdapter().onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateFcItemViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case DRAGE_ITEM_TYPE:
@@ -220,6 +284,9 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     @Override
     public void onBindFcItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         ItemViewHolder viewHolder = (ItemViewHolder)holder;
+        if (viewHolder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+            ((StaggeredGridLayoutManager.LayoutParams) viewHolder.itemView.getLayoutParams()).setFullSpan(true);
+        }
         String content = null;
         switch (viewHolder.viewType) {
             case DRAGE_ITEM_TYPE:
@@ -270,22 +337,25 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         if (!isIdleLoading || state == RecyclerView.SCROLL_STATE_IDLE) {
             if (layoutManager instanceof LinearLayoutManager) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                int visibleItemCount = linearLayoutManager.getChildCount();
-//                int totalItemCount = linearLayoutManager.getItemCount();
-                int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
+//                int visibleItemCount = linearLayoutManager.getChildCount();
+//                int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+//                boolean flag = getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount);
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                boolean flag = lastVisibleItem + lastLoadingItem >= getFcItemPosition();
+                Log.i("TAG", "lastVisibleItem: " + lastVisibleItem + ", lastLoadingItem: " + lastLoadingItem + ", FcItemPosition: " + getFcItemPosition());
+                if (flag) {
                     loadMore();
                 } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
                         setLoadItemType(LoadItemType.DRAGE);
                     }
                 }
-            } else if (layoutManager instanceof GridLayoutManager) {
-                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-                int visibleItemCount = gridLayoutManager.getChildCount();
-//                int totalItemCount = gridLayoutManager.getItemCount();
-                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
-                if (getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount)) {
+            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+                int[] lastSpanPositions = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
+                Log.i("TAG", "lastSpanPositions: " + lastSpanPositions[0] + ", " + lastSpanPositions[1]);
+                boolean flag = (lastSpanPositions[1] + lastLoadingItem >= getFcItemPosition()) || (lastSpanPositions[0] + lastLoadingItem >= getFcItemPosition()) ;
+                if (flag) {
                     loadMore();
                 } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
