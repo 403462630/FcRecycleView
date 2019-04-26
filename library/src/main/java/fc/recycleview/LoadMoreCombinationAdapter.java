@@ -135,16 +135,17 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         if (this.loadType != loadType) {
             this.loadType = loadType;
             Log.i("TAG", "LoadItemType: " + loadType.name());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        notifyItemChanged(getFcItemPosition());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            notifyItemChanged(getFcItemPosition());
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        notifyItemChanged(getFcItemPosition());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
         }
     }
 
@@ -324,6 +325,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
             ((StaggeredGridLayoutManager.LayoutParams) viewHolder.itemView.getLayoutParams()).setFullSpan(true);
         }
         String content = null;
+//        Log.i("TAG", "viewHolder.viewType: " + viewHolder.viewType);
         switch (viewHolder.viewType) {
             case DRAGE_ITEM_TYPE:
                 content = dragText;
@@ -384,10 +386,21 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 boolean flag = lastVisibleItem + lastLoadingItem >= getFcItemPosition();
 //                Log.i("TAG", "lastVisibleItem: " + lastVisibleItem + ", lastLoadingItem: " + lastLoadingItem + ", FcItemPosition: " + getFcItemPosition());
                 if (flag) {
-                    loadMore();
+                    // 一定要post，不然在recycleView 的 OnScrollListener 的 onScrolled 回调中调用 这个scroll方法会报错，下面也是如此
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadMore();
+                        }
+                    });
                 } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
-                        setLoadItemType(LoadItemType.DRAGE);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setLoadItemType(LoadItemType.DRAGE);
+                            }
+                        });
                     }
                 }
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
@@ -396,16 +409,31 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
 //                Log.i("TAG", "lastSpanPositions: " + lastSpanPositions[0] + ", " + lastSpanPositions[1]);
                 boolean flag = (lastSpanPositions[1] + lastLoadingItem >= getFcItemPosition()) || (lastSpanPositions[0] + lastLoadingItem >= getFcItemPosition()) ;
                 if (flag) {
-                    loadMore();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadMore();
+                        }
+                    });
                 } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
-                        setLoadItemType(LoadItemType.DRAGE);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setLoadItemType(LoadItemType.DRAGE);
+                            }
+                        });
                     }
                 }
             }
         } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
             if (!isDragging() && !isLoading() && !isLoadedAll() && onLoadMoreListener != null) {
-                setLoadItemType(LoadItemType.DRAGE);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLoadItemType(LoadItemType.DRAGE);
+                    }
+                });
             }
         }
     }
