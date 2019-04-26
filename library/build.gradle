@@ -6,7 +6,7 @@ ext {
 
 apply from: "../bintray.gradle"
 group="fc.recyclerview"
-version="1.2.0"
+version="1.2.1"
 
 
 
