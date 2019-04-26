@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import fc.com.recycleview.library.R;
 import fc.recycleview.base.BaseItemCombinationAdapter;
 import fc.recycleview.base.ItemNotifyAdapter;
@@ -42,6 +44,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private String loadedAllText;
     private String normalText;
     private Handler handler = new Handler();
+    private WeakReference<RecyclerView> recyclerViewRef;
 
     @LayoutRes
     private  int dragRes = R.layout.load_more_drag;
@@ -113,6 +116,13 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         this.emptyText = emptyText;
     }
 
+    private RecyclerView getRecyclerView() {
+        if (recyclerViewRef == null) {
+            return null;
+        }
+        return recyclerViewRef.get();
+    }
+
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
@@ -170,6 +180,31 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     public void notifyLoading() {
         setLoadItemType(LoadItemType.LOADING);
     }
+
+    private View.OnLayoutChangeListener loadAllOnLayoutChangeListener = new View.OnLayoutChangeListener() {
+
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            RecyclerView recyclerView = getRecyclerView();
+            if (v == recyclerView && recyclerView != null) {
+                v.removeOnLayoutChangeListener(loadAllOnLayoutChangeListener);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                    int visibleItemCount = linearLayoutManager.getChildCount();
+                    int itemCount = getFcItemPosition() + 1;
+                    // 当数据大于一屏的时候显示"没有更多的"提示
+                    boolean showLoadedAllItem = visibleItemCount != itemCount;
+
+                    RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(getFcItemPosition());
+                    if (viewHolder.getItemViewType() != LOADED_ALL_ITEM_TYPE) {
+                        return;
+                    }
+                    viewHolder.itemView.setVisibility(showLoadedAllItem ? View.VISIBLE : View.GONE);
+                }
+            }
+        }
+    };
 
     @Override
     public void notifyLoadedAll() {
@@ -247,6 +282,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerViewRef = new WeakReference<>(recyclerView);
         getWrapAdapter().onAttachedToRecyclerView(recyclerView);
     }
 
@@ -306,6 +342,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 break;
             case LOADED_ALL_ITEM_TYPE:
                 content = loadedAllText;
+                RecyclerView recyclerView = getRecyclerView();
+                if (recyclerView != null) {
+                    recyclerView.addOnLayoutChangeListener(loadAllOnLayoutChangeListener);
+                }
                 break;
             case EMPTY_ITEM_TYPE:
                 content = emptyText;
@@ -342,7 +382,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
 //                boolean flag = getFcItemPosition() >= firstVisibleItem && getFcItemPosition() - lastLoadingItem < (firstVisibleItem + visibleItemCount);
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 boolean flag = lastVisibleItem + lastLoadingItem >= getFcItemPosition();
-                Log.i("TAG", "lastVisibleItem: " + lastVisibleItem + ", lastLoadingItem: " + lastLoadingItem + ", FcItemPosition: " + getFcItemPosition());
+//                Log.i("TAG", "lastVisibleItem: " + lastVisibleItem + ", lastLoadingItem: " + lastLoadingItem + ", FcItemPosition: " + getFcItemPosition());
                 if (flag) {
                     loadMore();
                 } else if (state != RecyclerView.SCROLL_STATE_IDLE) {
@@ -353,7 +393,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
                 int[] lastSpanPositions = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
-                Log.i("TAG", "lastSpanPositions: " + lastSpanPositions[0] + ", " + lastSpanPositions[1]);
+//                Log.i("TAG", "lastSpanPositions: " + lastSpanPositions[0] + ", " + lastSpanPositions[1]);
                 boolean flag = (lastSpanPositions[1] + lastLoadingItem >= getFcItemPosition()) || (lastSpanPositions[0] + lastLoadingItem >= getFcItemPosition()) ;
                 if (flag) {
                     loadMore();

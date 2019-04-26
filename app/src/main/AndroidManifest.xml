@@ -20,6 +20,7 @@
             android:name=".LoadMoreCombinationFcActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity android:name=".NoMoreDataActivity"/>
     </application>
 
 </manifest>
