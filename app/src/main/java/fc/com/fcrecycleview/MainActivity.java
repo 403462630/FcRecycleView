@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void norMoreData(View view) {
+        startActivity(new Intent(this, NoMoreDataActivity.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
