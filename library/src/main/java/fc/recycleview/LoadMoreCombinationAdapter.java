@@ -197,7 +197,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                     boolean showLoadedAllItem = visibleItemCount != itemCount;
 
                     RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(getFcItemPosition());
-                    if (viewHolder.getItemViewType() != LOADED_ALL_ITEM_TYPE) {
+                    if (viewHolder == null || viewHolder.getItemViewType() != LOADED_ALL_ITEM_TYPE) {
                         return;
                     }
                     viewHolder.itemView.setVisibility(showLoadedAllItem ? View.VISIBLE : View.GONE);
