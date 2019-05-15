@@ -26,6 +26,7 @@ public class NoMoreDataActivity extends AppCompatActivity implements OnLoadMoreL
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         recycleView.setAdapter(adapter);
         recycleView.setOnLoadMoreListener(this);
+//        recycleView.setShowNoMoreTipsOnlyOnePage(true);
 
         List<String> data = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

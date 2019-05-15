@@ -157,6 +157,12 @@ public class LoadMoreRecycleView extends RecyclerView {
         }
     }
 
+    public void setShowNoMoreTipsOnlyOnePage(boolean showNoMoreTipsOnlyOnePage) {
+        if (fcAdapter != null) {
+            fcAdapter.setShowNoMoreTipsOnlyOnePage(showNoMoreTipsOnlyOnePage);
+        }
+    }
+
     private void initLoadMoreCombinationAdapter(LoadMoreCombinationAdapter adapter) {
         adapter.setLastLoadingItem(lastLoadingItem);
         adapter.setIdleLoading(isIdleLoading);

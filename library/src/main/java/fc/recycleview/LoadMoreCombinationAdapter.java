@@ -45,6 +45,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private String normalText;
     private Handler handler = new Handler();
     private WeakReference<RecyclerView> recyclerViewRef;
+    /**
+     * 数据小于一屏的情况下是否显示"没有更多"的提示
+     */
+    private boolean showNoMoreTipsOnlyOnePage = false;
 
     @LayoutRes
     private  int dragRes = R.layout.load_more_drag;
@@ -58,6 +62,10 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     private int loadedAllRes = R.layout.load_more_loaded_all;
     @LayoutRes
     private int normalRes = R.layout.load_more_normal;
+
+    public void setShowNoMoreTipsOnlyOnePage(boolean showNoMoreTipsOnlyOnePage) {
+        this.showNoMoreTipsOnlyOnePage = showNoMoreTipsOnlyOnePage;
+    }
 
     public void setIdleLoading(boolean idleLoading) {
         isIdleLoading = idleLoading;
@@ -344,9 +352,12 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 break;
             case LOADED_ALL_ITEM_TYPE:
                 content = loadedAllText;
-                RecyclerView recyclerView = getRecyclerView();
-                if (recyclerView != null) {
-                    recyclerView.addOnLayoutChangeListener(loadAllOnLayoutChangeListener);
+                viewHolder.itemView.setVisibility(View.VISIBLE);
+                if (!showNoMoreTipsOnlyOnePage) {
+                    RecyclerView recyclerView = getRecyclerView();
+                    if (recyclerView != null) {
+                        recyclerView.addOnLayoutChangeListener(loadAllOnLayoutChangeListener);
+                    }
                 }
                 break;
             case EMPTY_ITEM_TYPE:
