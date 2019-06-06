@@ -2,11 +2,11 @@ package fc.recycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.LayoutRes;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+
+import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import fc.com.recycleview.library.R;
 import fc.recycleview.base.ItemFcAdapter;

@@ -1,6 +1,6 @@
 package fc.recycleview.base;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by rjhy on 15-3-5.
