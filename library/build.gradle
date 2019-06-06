@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 ext {
-    projectName = "FcRecycleView"
+    projectName = "AndroidXFcRecycleView"
 }
 
 apply from: "../bintray.gradle"
