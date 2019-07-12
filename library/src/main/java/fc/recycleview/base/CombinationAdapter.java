@@ -1,5 +1,6 @@
 package fc.recycleview.base;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -22,6 +23,11 @@ public abstract class CombinationAdapter extends RecyclerView.Adapter {
         @Override
         public void onChanged() {
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+            notifyItemRangeChanged(positionStart, itemCount, payload);
         }
 
         @Override
