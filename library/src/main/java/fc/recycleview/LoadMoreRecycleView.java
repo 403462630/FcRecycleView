@@ -5,6 +5,10 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.annotation.LayoutRes;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +20,7 @@ import fc.recycleview.base.ItemScrollAdapter;
 /**
  * Created by rjhy on 15-3-4.
  */
-public class LoadMoreRecycleView extends RecyclerView {
+public class LoadMoreRecycleView extends RecyclerView implements LifecycleObserver {
 
     private boolean flag;
 
@@ -69,6 +73,29 @@ public class LoadMoreRecycleView extends RecyclerView {
         isIdleLoading = typedArray.getBoolean(R.styleable.LoadMoreRecycleView_load_more_idle_loading, false);
         lastLoadingItem = typedArray.getInt(R.styleable.LoadMoreRecycleView_load_more_last_loading_item, 0);
         typedArray.recycle();
+
+        if (context instanceof LifecycleOwner) {
+            ((LifecycleOwner) context).getLifecycle().addObserver(this);
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void onDestory() {
+        /*
+         确保Adapter#onDetachedFromRecyclerView被调用
+         */
+        super.setAdapter(null);
+    }
+
+    @Override
+    public void setLayoutManager(LayoutManager layoutManager) {
+        super.setLayoutManager(layoutManager);
+        if (layoutManager instanceof LinearLayoutManager) {
+            /*
+            确保Adapter#onViewDetachedFromWindow被调用
+             */
+            ((LinearLayoutManager) layoutManager).setRecycleChildrenOnDetach(true);
+        }
     }
 
     private OnScrollListener onScrollListener = new OnScrollListener() {

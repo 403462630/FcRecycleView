@@ -6,7 +6,7 @@ ext {
 
 apply from: "../bintray.gradle"
 group="fc.recyclerview.androidx"
-version="1.0.1"
+version="1.0.2"
 
 
 
@@ -56,7 +56,9 @@ artifacts {
 }
 
 dependencies {
+    def lifecycle_version = "2.2.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly 'androidx.appcompat:appcompat:1.0.2'
-    compileOnly 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
 }
