@@ -299,7 +299,7 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        getWrapAdapter().onAttachedToRecyclerView(recyclerView);
+        getWrapAdapter().onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override
