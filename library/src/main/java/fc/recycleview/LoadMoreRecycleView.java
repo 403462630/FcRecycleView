@@ -5,10 +5,6 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.annotation.LayoutRes;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +16,7 @@ import fc.recycleview.base.ItemScrollAdapter;
 /**
  * Created by rjhy on 15-3-4.
  */
-public class LoadMoreRecycleView extends RecyclerView implements LifecycleObserver {
+public class LoadMoreRecycleView extends RecyclerView {
 
     private boolean flag;
 
@@ -73,18 +69,6 @@ public class LoadMoreRecycleView extends RecyclerView implements LifecycleObserv
         isIdleLoading = typedArray.getBoolean(R.styleable.LoadMoreRecycleView_load_more_idle_loading, false);
         lastLoadingItem = typedArray.getInt(R.styleable.LoadMoreRecycleView_load_more_last_loading_item, 0);
         typedArray.recycle();
-
-        if (context instanceof LifecycleOwner) {
-            ((LifecycleOwner) context).getLifecycle().addObserver(this);
-        }
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestory() {
-        /*
-         确保Adapter#onDetachedFromRecyclerView被调用
-         */
-        super.setAdapter(null);
     }
 
     @Override
@@ -164,23 +148,27 @@ public class LoadMoreRecycleView extends RecyclerView implements LifecycleObserv
 
     @Override
     public void setAdapter(Adapter adapter) {
-        if (adapter instanceof ItemFcAdapter) {
-            if (adapter instanceof LoadMoreCombinationAdapter) {
-                initLoadMoreCombinationAdapter((LoadMoreCombinationAdapter) adapter);
-            }
-            super.setAdapter(adapter);
+        if (adapter == null) {
+            super.setAdapter(null);
         } else {
-            fcAdapter = new LoadMoreCombinationAdapter<>(getContext(), adapter);
-            initLoadMoreCombinationAdapter(fcAdapter);
-            super.setAdapter(fcAdapter);
-        }
+            if (adapter instanceof ItemFcAdapter) {
+                if (adapter instanceof LoadMoreCombinationAdapter) {
+                    initLoadMoreCombinationAdapter((LoadMoreCombinationAdapter) adapter);
+                }
+                super.setAdapter(adapter);
+            } else {
+                fcAdapter = new LoadMoreCombinationAdapter<>(getContext(), adapter);
+                initLoadMoreCombinationAdapter(fcAdapter);
+                super.setAdapter(fcAdapter);
+            }
 
-        if (getAdapter() instanceof ItemScrollAdapter) {
-            itemScrollAdapter = (ItemScrollAdapter) getAdapter();
-        }
+            if (getAdapter() instanceof ItemScrollAdapter) {
+                itemScrollAdapter = (ItemScrollAdapter) getAdapter();
+            }
 
-        if (getAdapter() instanceof ItemNotifyAdapter) {
-            itemNotifyAdapter = (ItemNotifyAdapter) getAdapter();
+            if (getAdapter() instanceof ItemNotifyAdapter) {
+                itemNotifyAdapter = (ItemNotifyAdapter) getAdapter();
+            }
         }
     }
 
