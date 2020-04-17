@@ -344,12 +344,21 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 break;
             case ERROR_ITEM_TYPE:
                 content = errorText;
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loadMore();
-                    }
-                });
+                if (viewHolder.actionView != null) {
+                    viewHolder.actionView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadMore();
+                        }
+                    });
+                } else {
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadMore();
+                        }
+                    });
+                }
                 break;
             case LOADED_ALL_ITEM_TYPE:
                 content = loadedAllText;
@@ -366,12 +375,21 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
                 break;
             case NORMAL_ITEM_TYPE:
                 content = normalText;
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loadMore();
-                    }
-                });
+                if (viewHolder.actionView != null) {
+                    viewHolder.actionView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadMore();
+                        }
+                    });
+                } else {
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadMore();
+                        }
+                    });
+                }
                 break;
         }
         if (viewHolder.contentView != null && content != null) {
@@ -453,10 +471,12 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
     static class ItemViewHolder extends RecyclerView.ViewHolder{
         int viewType;
         TextView contentView;
+        View actionView;
         public ItemViewHolder(View itemView, int viewType) {
             super(itemView);
             this.viewType = viewType;
             contentView = (TextView) itemView.findViewById(R.id.tv_content);
+            actionView = itemView.findViewById(R.id.do_action_view);
         }
     }
 }
