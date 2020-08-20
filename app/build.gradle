@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "fc.com.fcrecycleview"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -27,4 +27,5 @@ dependencies {
     implementation project(":library")
 //    implementation "fc.recyclerview.androidx:library:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'fc.nestedscrollview.androidx:library:1.0.5'
 }

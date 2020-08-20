@@ -6,7 +6,7 @@ ext {
 
 apply from: "../bintray.gradle"
 group="fc.recyclerview.androidx"
-version="1.0.5"
+version="1.0.6"
 
 
 
@@ -14,7 +14,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -60,5 +60,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'fc.nestedscrollview.androidx:library:1.0.5'
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
 }

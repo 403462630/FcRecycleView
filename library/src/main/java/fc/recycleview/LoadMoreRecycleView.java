@@ -8,6 +8,8 @@ import androidx.annotation.LayoutRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fc.nestedscrollview.FCRecyclerView;
+
 import fc.com.recycleview.library.R;
 import fc.recycleview.base.ItemFcAdapter;
 import fc.recycleview.base.ItemNotifyAdapter;
@@ -16,7 +18,7 @@ import fc.recycleview.base.ItemScrollAdapter;
 /**
  * Created by rjhy on 15-3-4.
  */
-public class LoadMoreRecycleView extends RecyclerView {
+public class LoadMoreRecycleView extends FCRecyclerView {
 
     private boolean flag;
 

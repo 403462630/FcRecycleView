@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <fc.recycleview.LoadMoreRecycleView
@@ -12,6 +13,7 @@
         android:clipToPadding="false"
         android:layout_below="@id/btn1"
         android:overScrollMode="never"
-        android:padding="10dp" />
+        android:padding="10dp"
+        app:fc_scroll_mode="down"/>
 
 </LinearLayout>
