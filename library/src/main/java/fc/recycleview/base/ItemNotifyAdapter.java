@@ -11,4 +11,6 @@ public interface ItemNotifyAdapter {
     public void notifyLoadedAll();
 
     public void notifyNormal();
+
+    public void notifyDragged();
 }

@@ -226,6 +226,11 @@ public class LoadMoreCombinationAdapter<T> extends BaseItemCombinationAdapter
         setLoadItemType(LoadItemType.NO_LOADING);
     }
 
+    @Override
+    public void notifyDragged() {
+        setLoadItemType(LoadItemType.DRAGE);
+    }
+
     public static enum LoadItemType {
         LOADING, DRAGE ,NO_LOADING, LOADED_ALL, ERROR
     }

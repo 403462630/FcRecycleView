@@ -240,6 +240,12 @@ public class LoadMoreRecycleView extends FCRecyclerView {
         }
     }
 
+    public void notifyDragged() {
+        if (itemNotifyAdapter != null) {
+            itemNotifyAdapter.notifyDragged();
+        }
+    }
+
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
         Adapter adapter = getAdapter();
         if (adapter != null) {
