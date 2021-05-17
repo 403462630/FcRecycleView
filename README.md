@@ -1,14 +1,5 @@
 # FcRecycleView
 
-```
-repositories {
-    maven { url  "http://dl.bintray.com/403462630/maven"  }
-}
-// 如果你使用的是androidx包，则使用
-implementation 'fc.recyclerview.androidx:library:1.0.7'
-
-// 如果你使用的是support包，则使用
-implementation 'fc.recyclerview:library:1.3.2'
-```
+此项目已废弃，已迁移至[LoadMoreRecyclerView](https://github.com/403462630/LoadMoreRecyclerView)项目
 
 
